@@ -1,0 +1,54 @@
+-- Roblox Boost FPS Script (Clay-Like Graphics)
+-- This script reduces effects and visual complexity to the lowest possible level.
+
+-- Function to clear all unnecessary effects
+local function clearEffects()
+    local effects = {"ParticleEmitter", "Smoke", "Fire", "Sparkles", "Trail", "Explosion"}
+    for _, v in ipairs(game:GetDescendants()) do
+        if table.find(effects, v.ClassName) then
+            v:Destroy()
+        end
+    end
+    print("[FPS BOOST]: Effects removed!")
+end
+
+-- Function to remove textures and decals
+local function removeTextures()
+    for _, v in ipairs(game:GetDescendants()) do
+        if v:IsA("Texture") or v:IsA("Decal") then
+            v:Destroy()
+        end
+    end
+    print("[FPS BOOST]: Textures and decals removed!")
+end
+
+-- Function to simplify materials (make everything smooth plastic)
+local function simplifyMaterials()
+    for _, v in ipairs(game:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Material = Enum.Material.SmoothPlastic
+            v.Color = Color3.new(0.8, 0.8, 0.8) -- Light gray for uniform appearance
+        end
+    end
+    print("[FPS BOOST]: Materials simplified!")
+end
+
+-- Function to optimize lighting settings
+local function optimizeLighting()
+    local lighting = game:GetService("Lighting")
+    lighting.GlobalShadows = false
+    lighting.EnvironmentSpecularScale = 0
+    lighting.EnvironmentDiffuseScale = 0
+    lighting.Brightness = 1
+    lighting.ClockTime = 12 -- Midday lighting
+    lighting.FogEnd = 9e9 -- Disable fog
+    print("[FPS BOOST]: Lighting optimized!")
+end
+
+-- Execute all optimizations
+clearEffects()
+removeTextures()
+simplifyMaterials()
+optimizeLighting()
+
+print("[FPS BOOST]: The game has been optimized for maximum performance!")
