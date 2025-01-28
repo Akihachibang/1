@@ -1,0 +1,24 @@
+local UserInputService = game:GetService("UserInputService")
+local isRunning = false
+
+-- ฟังก์ชันที่ใช้กดปุ่ม Q ซ้ำ ๆ
+local function spamQ()
+    while isRunning do
+        wait(0.1) -- หน่วงเวลา 0.1 วินาที
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Q, false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Q, false, game)
+    end
+end
+
+-- ฟังก์ชันเปิด/ปิดการทำงานด้วยปุ่ม X
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.X then
+        isRunning = not isRunning
+        if isRunning then
+            print("เปิดใช้งาน: เริ่มกดปุ่ม Q ซ้ำ ๆ")
+            spamQ()
+        else
+            print("ปิดใช้งาน: หยุดกดปุ่ม Q")
+        end
+    end
+end)
