@@ -1,0 +1,12 @@
+-- Anti-AFK Script with English Notification
+local VirtualUser = game:service('VirtualUser')
+
+-- Display message when the script starts
+print("Anti-AFK Script: Running")
+
+-- Connect Event to detect idle status
+game:GetService('Players').LocalPlayer.Idled:connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new(0,0))
+    print("Anti-AFK: Prevented being kicked")
+end)
