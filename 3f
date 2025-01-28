@@ -1,0 +1,33 @@
+-- กำหนดตัวแปร
+local UIS = game:GetService("UserInputService")
+local ScreenGui = Instance.new("ScreenGui")
+local WhiteFrame = Instance.new("Frame")
+
+-- สร้าง GUI สีขาว
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+WhiteFrame.Parent = ScreenGui
+WhiteFrame.Size = UDim2.new(1, 0, 1, 0)
+WhiteFrame.BackgroundColor3 = Color3.new(1, 1, 1) -- สีขาว
+WhiteFrame.Visible = false -- เริ่มต้นเป็นปิด
+
+-- ฟังก์ชันสำหรับเปิด/ปิดหน้าจอขาว
+local isWhiteScreenEnabled = false
+local function toggleWhiteScreen()
+    isWhiteScreenEnabled = not isWhiteScreenEnabled
+    WhiteFrame.Visible = isWhiteScreenEnabled
+    if isWhiteScreenEnabled then
+        game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false) -- ปิด UI ทั้งหมด
+    else
+        game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, true) -- เปิด UI กลับมา
+    end
+end
+
+-- เชื่อมโยงการกดปุ่ม (เปลี่ยนเป็น Z)
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end -- หากปุ่มถูกใช้ไปแล้วในเกม ให้ข้ามไป
+    if input.KeyCode == Enum.KeyCode.Z then
+        toggleWhiteScreen()
+    end
+end)
