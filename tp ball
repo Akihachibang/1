@@ -13,12 +13,13 @@ local function GetBall()
     end
 end
 
+-- ใช้ RenderStepped ในการตรวจสอบบอลใหม่ในทุกๆ เฟรม
 RunService.RenderStepped:Connect(function()
-    local Ball = GetBall()
+    local Ball = GetBall() -- หา Ball ทุกครั้ง
     if not Ball or not HRP then return end
 
     local BallPosition = Ball.Position
-    local TargetPosition = BallPosition - Vector3.new(0, 20, 0) -- ลอยต่ำกว่าบอล 10 Studs
+    local TargetPosition = BallPosition - Vector3.new(0, 20, 0) -- ลอยต่ำกว่าบอล 20 Studs
 
     -- ปรับตำแหน่งตัวละครให้เคลื่อนที่ไปยังจุดเป้าหมาย
     HRP.CFrame = CFrame.new(TargetPosition)
