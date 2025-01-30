@@ -1,0 +1,25 @@
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+local Player = Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local HRP = Character:WaitForChild("HumanoidRootPart") -- HumanoidRootPart ของตัวละครเรา
+
+local function GetBall()
+    for _, Ball in ipairs(workspace.Balls:GetChildren()) do
+        if Ball:GetAttribute("realBall") then
+            return Ball
+        end
+    end
+end
+
+RunService.RenderStepped:Connect(function()
+    local Ball = GetBall()
+    if not Ball or not HRP then return end
+
+    local BallPosition = Ball.Position
+    local TargetPosition = BallPosition - Vector3.new(0, 10, 0) -- ลอยต่ำกว่าบอล 10 Studs
+
+    -- ปรับตำแหน่งตัวละครให้เคลื่อนที่ไปยังจุดเป้าหมาย
+    HRP.CFrame = CFrame.new(TargetPosition)
+end)
