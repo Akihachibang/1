@@ -13,14 +13,51 @@ local function GetBall()
     end
 end
 
+-- ฟังก์ชันสำหรับการทำให้ตัวละครทะลุทุกสิ่งที่ขวาง
+local function EnableNoSlip()
+    -- ตั้งค่าการชนของ HumanoidRootPart ให้เป็น false
+    HRP.CanCollide = false
+end
+
+-- ฟังก์ชันสำหรับการเปิดการชนของตัวละคร
+local function DisableNoSlip()
+    -- เปิดการชนกลับ
+    HRP.CanCollide = true
+end
+
+-- ฟังก์ชันตรวจสอบการตายของตัวละคร
+local function OnCharacterDeath()
+    -- เมื่อตัวละครตาย จะรอให้ตัวละครใหม่เกิดก่อน
+    Character:WaitForChild("HumanoidRootPart")
+    HRP = Character:WaitForChild("HumanoidRootPart") -- HumanoidRootPart ใหม่
+end
+
+-- ฟังก์ชันเมื่อมีการเปลี่ยนแปลงตัวละคร (ถ้าตายแล้วเกิดใหม่)
+Player.CharacterAdded:Connect(function()
+    Character = Player.Character or Player.CharacterAdded:Wait()
+    HRP = Character:WaitForChild("HumanoidRootPart") -- รอให้ตัวละครใหม่พร้อม
+
+    -- เมื่อเกิดใหม่ให้ตั้งค่าต่างๆ
+    EnableNoSlip()
+end)
+
 -- ใช้ RenderStepped ในการตรวจสอบบอลใหม่ในทุกๆ เฟรม
 RunService.RenderStepped:Connect(function()
     local Ball = GetBall() -- หา Ball ทุกครั้ง
     if not Ball or not HRP then return end
 
     local BallPosition = Ball.Position
-    local TargetPosition = BallPosition - Vector3.new(0, 20, 0) -- ลอยต่ำกว่าบอล 20 Studs
+    local TargetPosition = BallPosition - Vector3.new(0, 15, 0) -- ลอยต่ำกว่าบอล 20 Studs
+
+    -- เปิดฟังก์ชัน No-Slip (ไม่ชน)
+    EnableNoSlip()
 
     -- ปรับตำแหน่งตัวละครให้เคลื่อนที่ไปยังจุดเป้าหมาย
     HRP.CFrame = CFrame.new(TargetPosition)
+
+    -- ปิดฟังก์ชัน No-Slip (หลังจากเคลื่อนที่เสร็จ)
+    DisableNoSlip()
 end)
+
+-- เชื่อมต่อฟังก์ชันการตายของตัวละคร
+Character:WaitForChild("Humanoid").Died:Connect(OnCharacterDeath)
