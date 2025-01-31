@@ -1,0 +1,24 @@
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui", player:FindFirstChild("PlayerGui") or player)
+screenGui.Name = "FPSDisplay"
+
+local fpsLabel = Instance.new("TextLabel", screenGui)
+fpsLabel.Size = UDim2.new(0, 150, 0, 30) -- ขนาดกล่องข้อความ
+fpsLabel.Position = UDim2.new(0, 10, 1, -40) -- ตำแหน่ง (มุมล่างซ้าย)
+fpsLabel.BackgroundTransparency = 0.5 -- โปร่งใส 50%
+fpsLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- พื้นหลังสีดำ
+fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- ข้อความสีขาว
+fpsLabel.TextScaled = true
+fpsLabel.Font = Enum.Font.SourceSansBold
+fpsLabel.Text = "FPS: 0"
+
+-- อัปเดต FPS ทุกเฟรม
+local runService = game:GetService("RunService")
+local lastTime = tick()
+
+runService.RenderStepped:Connect(function()
+    local currentTime = tick()
+    local fps = math.floor(1 / (currentTime - lastTime)) -- คำนวณ FPS
+    lastTime = currentTime
+    fpsLabel.Text = "FPS: " .. fps
+end)
