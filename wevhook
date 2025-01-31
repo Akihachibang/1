@@ -1,0 +1,45 @@
+-- UI Script (Put this inside a LocalScript in StarterGui)
+local player = game.Players.LocalPlayer
+local textBox = script.Parent.TextBox -- Reference to the TextBox
+local button = script.Parent.Button -- Reference to the Button
+
+button.MouseButton1Click:Connect(function()
+    local webhookURL = textBox.Text
+    if webhookURL ~= "" then
+        game.ReplicatedStorage.FetchWebhookData:FireServer(webhookURL)
+    end
+end)
+
+-- Server Script (Put this in ServerScriptService)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+
+local event = Instance.new("RemoteEvent")
+event.Name = "FetchWebhookData"
+event.Parent = ReplicatedStorage
+
+event.OnServerEvent:Connect(function(player, url)
+    local success, response = pcall(function()
+        return HttpService:GetAsync(url)
+    end)
+    
+    if success then
+        local data = HttpService:JSONDecode(response)
+        
+        if not player:FindFirstChild("leaderstats") then
+            local leaderstats = Instance.new("Folder")
+            leaderstats.Name = "leaderstats"
+            leaderstats.Parent = player
+        end
+        
+        for key, value in pairs(data) do
+            local stat = player.leaderstats:FindFirstChild(key)
+            if not stat then
+                stat = Instance.new("IntValue")
+                stat.Name = key
+                stat.Parent = player.leaderstats
+            end
+            stat.Value = tonumber(value) or 0
+        end
+    end
+end)
