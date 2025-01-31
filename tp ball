@@ -47,7 +47,7 @@ RunService.RenderStepped:Connect(function()
     if not Ball or not HRP then return end
 
     local BallPosition = Ball.Position
-    local TargetPosition = BallPosition - Vector3.new(0, 15, 0) -- ลอยต่ำกว่าบอล 20 Studs
+    local TargetPosition = BallPosition - Vector3.new(0, 13, 0) -- ลอยต่ำกว่าบอล 20 Studs
 
     -- เปิดฟังก์ชัน No-Slip (ไม่ชน)
     EnableNoSlip()
