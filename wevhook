@@ -1,45 +1,41 @@
--- UI Script (Put this inside a LocalScript in StarterGui)
-local player = game.Players.LocalPlayer
-local textBox = script.Parent.TextBox -- Reference to the TextBox
-local button = script.Parent.Button -- Reference to the Button
-
-button.MouseButton1Click:Connect(function()
-    local webhookURL = textBox.Text
-    if webhookURL ~= "" then
-        game.ReplicatedStorage.FetchWebhookData:FireServer(webhookURL)
-    end
-end)
-
--- Server Script (Put this in ServerScriptService)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
+-- สร้าง RemoteEvent สำหรับรับข้อมูลจาก LocalScript
 local event = Instance.new("RemoteEvent")
 event.Name = "FetchWebhookData"
 event.Parent = ReplicatedStorage
 
+-- เมื่อได้รับข้อมูลจาก LocalScript
 event.OnServerEvent:Connect(function(player, url)
+    if not url:match("^https?://") then
+        warn("URL ไม่ถูกต้อง!")
+        return
+    end
+
     local success, response = pcall(function()
-        return HttpService:GetAsync(url)
+        return HttpService:GetAsync(url) -- ดึงข้อมูลจาก Webhook
     end)
-    
+
     if success then
-        local data = HttpService:JSONDecode(response)
-        
+        print("Webhook Response:", response) -- แสดงข้อมูลจาก Webhook
+        local data = HttpService:JSONDecode(response) -- แปลง JSON เป็นตาราง
         if not player:FindFirstChild("leaderstats") then
             local leaderstats = Instance.new("Folder")
             leaderstats.Name = "leaderstats"
             leaderstats.Parent = player
         end
-        
+
         for key, value in pairs(data) do
             local stat = player.leaderstats:FindFirstChild(key)
             if not stat then
-                stat = Instance.new("IntValue")
+                stat = Instance.new("StringValue") -- แสดงข้อมูลแบบ String
                 stat.Name = key
                 stat.Parent = player.leaderstats
             end
-            stat.Value = tonumber(value) or 0
+            stat.Value = tostring(value)
         end
+    else
+        warn("ไม่สามารถเชื่อมต่อ Webhook ได้:", response)
     end
 end)
