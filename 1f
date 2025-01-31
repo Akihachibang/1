@@ -42,7 +42,7 @@ RunService.PreSimulation:Connect(function()
     local Distance = (HRP.Position - Ball.Position).Magnitude
     
     if Ball:GetAttribute("target") == Player.Name and not Parried and Distance / Speed <= 0.26 then
-      VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+      VirtualInputManager:SendMouseButtonEvent(0, 1, 0, true, game, 0)
       Parried = true
       Cooldown = tick()
       
