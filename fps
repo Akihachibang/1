@@ -1,7 +1,6 @@
--- Roblox Boost FPS Script (Clay-Like Graphics)
--- This script reduces effects and visual complexity to the lowest possible level.
+-- Roblox Auto Boost FPS Script (Runs on Every New Map)
+-- This script clears effects, removes textures, and simplifies graphics automatically on new maps.
 
--- Function to clear all unnecessary effects
 local function clearEffects()
     local effects = {"ParticleEmitter", "Smoke", "Fire", "Sparkles", "Trail", "Explosion"}
     for _, v in ipairs(game:GetDescendants()) do
@@ -12,7 +11,6 @@ local function clearEffects()
     print("[FPS BOOST]: Effects removed!")
 end
 
--- Function to remove textures and decals
 local function removeTextures()
     for _, v in ipairs(game:GetDescendants()) do
         if v:IsA("Texture") or v:IsA("Decal") then
@@ -22,7 +20,6 @@ local function removeTextures()
     print("[FPS BOOST]: Textures and decals removed!")
 end
 
--- Function to simplify materials (make everything smooth plastic)
 local function simplifyMaterials()
     for _, v in ipairs(game:GetDescendants()) do
         if v:IsA("BasePart") then
@@ -33,7 +30,6 @@ local function simplifyMaterials()
     print("[FPS BOOST]: Materials simplified!")
 end
 
--- Function to optimize lighting settings
 local function optimizeLighting()
     local lighting = game:GetService("Lighting")
     lighting.GlobalShadows = false
@@ -45,10 +41,23 @@ local function optimizeLighting()
     print("[FPS BOOST]: Lighting optimized!")
 end
 
--- Execute all optimizations
-clearEffects()
-removeTextures()
-simplifyMaterials()
-optimizeLighting()
+local function boostFPS()
+    clearEffects()
+    removeTextures()
+    simplifyMaterials()
+    optimizeLighting()
+    print("[FPS BOOST]: The game has been optimized!")
+end
 
-print("[FPS BOOST]: The game has been optimized for maximum performance!")
+-- Run Boost FPS at the start
+boostFPS()
+
+-- Auto run when player spawns in a new game
+game:GetService("Players").PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        task.wait(2) -- Delay to allow assets to load
+        boostFPS()
+    end)
+end)
+
+print("[FPS BOOST]: Auto FPS boost enabled. It will run on every new map load!")
