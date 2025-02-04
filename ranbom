@@ -1,0 +1,28 @@
+while true do
+    -- ส่งคำสั่ง ProcessLTMRoll
+    local args = {
+        [1] = true
+    }
+    game:GetService("ReplicatedStorage")
+        :WaitForChild("Packages")
+        :WaitForChild("_Index")
+        :WaitForChild("sleitnick_net@0.1.0")
+        :WaitForChild("net")
+        :WaitForChild("RE/ProcessLTMRoll")
+        :FireServer(unpack(args))
+
+    -- หน่วงเวลา 1 วินาที (ปรับได้)
+    wait(1)
+
+    -- ส่งคำสั่ง ClaimLTMReward
+    game:GetService("ReplicatedStorage")
+        :WaitForChild("Packages")
+        :WaitForChild("_Index")
+        :WaitForChild("sleitnick_net@0.1.0")
+        :WaitForChild("net")
+        :WaitForChild("RE/ClaimLTMReward")
+        :FireServer()
+
+    -- หน่วงเวลาอีก 1 วินาที (ปรับได้)
+    wait(0)
+end
