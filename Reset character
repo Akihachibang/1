@@ -1,0 +1,26 @@
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+local running = false
+
+local function resetCharacter()
+    while running do
+        if player.Character then
+            player.Character:BreakJoints()
+        end
+        wait(2) -- เวลาหน่วงเพื่อป้องกันการรีเซ็ตเร็วเกินไป
+    end
+end
+
+local function toggleReset()
+    running = not running
+    if running then
+        task.spawn(resetCharacter)
+    end
+end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.K then
+        toggleReset()
+    end
+end)
