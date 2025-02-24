@@ -10,7 +10,7 @@ ScreenGui.ResetOnSpawn = false
 local Frame = Instance.new("Frame", ScreenGui)
 Frame.Size = UDim2.new(1, 0, 1, 0)
 Frame.BackgroundColor3 = Color3.new(0, 0, 0) -- ทำให้หน้าจอเป็นสีดำ
-Frame.Visible = false -- ซ่อนตอนเริ่มต้น
+Frame.Visible = true -- แสดงทันทีที่รันสคริปต์
 
 local TimeLabel = Instance.new("TextLabel", Frame)
 TimeLabel.Size = UDim2.new(0, 400, 0, 100)
@@ -21,18 +21,11 @@ TimeLabel.TextScaled = true
 TimeLabel.Font = Enum.Font.SourceSansBold
 TimeLabel.Text = "AFK: 0 นาที 0 วินาที"
 
--- ตัวจับเวลา AFK
+-- ตัวจับเวลา AFK (เริ่มจับเวลาทันที)
 local afkTime = 0
-local isAFK = false
 
--- เริ่มจับเวลาถ้าผู้เล่นอยู่เฉยๆ
-Player.Idled:connect(function()
-    if not isAFK then
-        isAFK = true
-        Frame.Visible = true
-    end
-
-    while isAFK do
+spawn(function()
+    while true do
         wait(1)
         afkTime = afkTime + 1
         local minutes = math.floor(afkTime / 60)
@@ -41,24 +34,18 @@ Player.Idled:connect(function()
     end
 end)
 
--- หยุดจับเวลาเมื่อผู้เล่นขยับ
-UserInputService.InputBegan:Connect(function()
-    if isAFK then
-        isAFK = false
-        afkTime = 0
-        Frame.Visible = false
-    end
-end)
-
 -- ป้องกัน AFK โดยการจำลองปุ่มกด
-Player.Idled:connect(function()
-    VirtualUser:CaptureController()
-    VirtualUser:ClickButton2(Vector2.new(0,0))
-    
-    -- กดเดินหน้าแล้วหยุด
-    UserInputService.InputBegan:Fire({ KeyCode = Enum.KeyCode.W }, false)
-    wait(0.1)
-    UserInputService.InputEnded:Fire({ KeyCode = Enum.KeyCode.W }, false)
+spawn(function()
+    while true do
+        wait(30) -- ทุก 30 วินาทีให้กดปุ่มกัน AFK
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new(0,0))
 
-    print("Anti-AFK: Prevented being kicked")
+        -- กดเดินหน้าแล้วหยุด
+        UserInputService.InputBegan:Fire({ KeyCode = Enum.KeyCode.W }, false)
+        wait(0.1)
+        UserInputService.InputEnded:Fire({ KeyCode = Enum.KeyCode.W }, false)
+
+        print("Anti-AFK: Prevented being kicked")
+    end
 end)
