@@ -21,9 +21,23 @@ TimeLabel.TextScaled = true
 TimeLabel.Font = Enum.Font.SourceSansBold
 TimeLabel.Text = "AFK: 0 นาที 0 วินาที"
 
+-- ปุ่มปิดหน้าจอสีดำ
+local CloseButton = Instance.new("TextButton", Frame)
+CloseButton.Size = UDim2.new(0, 200, 0, 50)
+CloseButton.Position = UDim2.new(0.5, -100, 0.7, 0)
+CloseButton.BackgroundColor3 = Color3.new(1, 0, 0)
+CloseButton.TextColor3 = Color3.new(1, 1, 1)
+CloseButton.TextScaled = true
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.Text = "ปิดหน้าจอสีดำ"
+
+-- กดปุ่มแล้วปิด UI
+CloseButton.MouseButton1Click:Connect(function()
+    Frame.Visible = false
+end)
+
 -- ตัวจับเวลา AFK (เริ่มจับเวลาทันที)
 local afkTime = 0
-
 spawn(function()
     while true do
         wait(1)
