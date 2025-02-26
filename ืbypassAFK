@@ -3,38 +3,19 @@ local Player = game:GetService("Players").LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 
--- UI สำหรับแสดงเวลาที่ AFK
+-- UI สำหรับแสดงเวลาที่ AFK (อยู่มุมล่างขวา)
 local ScreenGui = Instance.new("ScreenGui", CoreGui)
 ScreenGui.ResetOnSpawn = false
 
-local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(1, 0, 1, 0)
-Frame.BackgroundColor3 = Color3.new(0, 0, 0) -- ทำให้หน้าจอเป็นสีดำ
-Frame.Visible = true -- แสดงทันทีที่รันสคริปต์
-
-local TimeLabel = Instance.new("TextLabel", Frame)
-TimeLabel.Size = UDim2.new(0, 400, 0, 100)
-TimeLabel.Position = UDim2.new(0.5, -200, 0.5, -50)
-TimeLabel.BackgroundTransparency = 1
+local TimeLabel = Instance.new("TextLabel", ScreenGui)
+TimeLabel.Size = UDim2.new(0, 250, 0, 50)
+TimeLabel.Position = UDim2.new(1, -270, 1, -60) -- อยู่มุมล่างขวา
+TimeLabel.BackgroundTransparency = 0.5
+TimeLabel.BackgroundColor3 = Color3.new(0, 0, 0)
 TimeLabel.TextColor3 = Color3.new(1, 1, 1)
 TimeLabel.TextScaled = true
 TimeLabel.Font = Enum.Font.SourceSansBold
-TimeLabel.Text = "AFK: 0 นาที 0 วินาที"
-
--- ปุ่มปิดหน้าจอสีดำ
-local CloseButton = Instance.new("TextButton", Frame)
-CloseButton.Size = UDim2.new(0, 200, 0, 50)
-CloseButton.Position = UDim2.new(0.5, -100, 0.7, 0)
-CloseButton.BackgroundColor3 = Color3.new(1, 0, 0)
-CloseButton.TextColor3 = Color3.new(1, 1, 1)
-CloseButton.TextScaled = true
-CloseButton.Font = Enum.Font.SourceSansBold
-CloseButton.Text = "ปิดหน้าจอสีดำ"
-
--- กดปุ่มแล้วปิด UI
-CloseButton.MouseButton1Click:Connect(function()
-    Frame.Visible = false
-end)
+TimeLabel.Text = "AFK: 0 ชม. 0 นาที 0 วินาที"
 
 -- ตัวจับเวลา AFK (เริ่มจับเวลาทันที)
 local afkTime = 0
@@ -42,9 +23,10 @@ spawn(function()
     while true do
         wait(1)
         afkTime = afkTime + 1
-        local minutes = math.floor(afkTime / 60)
+        local hours = math.floor(afkTime / 3600)
+        local minutes = math.floor((afkTime % 3600) / 60)
         local seconds = afkTime % 60
-        TimeLabel.Text = "AFK: " .. minutes .. " นาที " .. seconds .. " วินาที"
+        TimeLabel.Text = "AFK: " .. hours .. " ชม. " .. minutes .. " นาที " .. seconds .. " วินาที"
     end
 end)
 
