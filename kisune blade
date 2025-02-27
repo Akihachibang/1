@@ -1,0 +1,9 @@
+_G.SpinGacha = function()
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index")
+        :WaitForChild("sleitnick_net@0.1.0"):WaitForChild("net")
+        :WaitForChild("RF/GenericGachaFTPSpin"):InvokeServer()
+    print("Executed GenericGachaFTPSpin Successfully")
+end
+
+-- เรียกใช้งานทันทีเมื่อรันสคริปต์
+_G.SpinGacha()
