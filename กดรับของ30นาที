@@ -1,13 +1,18 @@
-_G.ClaimRewards = function()
-    for i = 1, 6 do
-        local args = { [1] = i }
+-- ฟังก์ชันรับรางวัลที่ทำงานซ้ำไปเรื่อย ๆ
+_G.ClaimRewards = function(index)
+    while true do
+        local args = { [1] = index }
         game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index")
             :WaitForChild("sleitnick_net@0.1.0"):WaitForChild("net")
             :WaitForChild("RF/ClaimPlaytimeReward"):InvokeServer(unpack(args))
-        print("Claimed Playtime Reward:", i)
-        wait(1) -- รอ 1 วินาทีระหว่างแต่ละคำสั่ง
+        print("Claimed Playtime Reward:", index)
+        wait(10 * index) -- รอระยะเวลาตามลำดับเพื่อไม่ให้ซ้อนกันมากเกินไป
     end
 end
 
--- รันอัตโนมัติเมื่อโหลดสคริปต์
-_G.ClaimRewards()
+-- เรียกใช้รับรางวัลทั้ง 6 อัน แยกกัน
+for i = 1, 6 do
+    task.spawn(function()
+        _G.ClaimRewards(i)
+    end)
+end
