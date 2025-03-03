@@ -1,19 +1,19 @@
-local RunService = game:GetService("RunService") or game:FindFirstDescendant("RunService")
-local Players = game:GetService("Players") or game:FindFirstDescendant("Players")
-local VirtualInputManager = game:GetService("VirtualInputManager") or game:FindFirstDescendant("VirtualInputManager")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
 local Player = Players.LocalPlayer
 
 local Cooldown = tick()
-local IsParried = false
+local Parried = false
 local Connection = nil
 
 local function GetBall()
-  for _, Ball in ipairs(workspace.Balls:GetChildren()) do
-    if Ball:GetAttribute("realBall") then
-      return Ball
+    for _, Ball in ipairs(workspace.Balls:GetChildren()) do
+        if Ball:GetAttribute("realBall") then
+            return Ball
+        end
     end
-  end
 end
 
 local function ResetConnection()
@@ -32,22 +32,24 @@ workspace.Balls.ChildAdded:Connect(function()
     end)
 end)
 
-RunService.PreSimulation:Connect(function()
-    local Ball, HRP = GetBall(), Player.Character.HumanoidRootPart
-    if not Ball or not HRP then
-      return
-    end
+RunService.Heartbeat:Connect(function()
+    local Ball = GetBall()
+    local HRP = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
     
-    local Speed = Ball.zoomies.VectorVelocity.Magnitude
+    if not Ball or not HRP then
+        return
+    end
+
+    local Speed = Ball.zoomies and Ball.zoomies.VectorVelocity.Magnitude or 0
     local Distance = (HRP.Position - Ball.Position).Magnitude
     
-    if Ball:GetAttribute("target") == Player.Name and not Parried and Distance / Speed <= 0.33 then
-      VirtualInputManager:SendMouseButtonEvent(0, จ, 0, true, game, 0)
-      Parried = true
-      Cooldown = tick()
-      
-      if (tick() - Cooldown) >= 0.1 then
-        Partied = false
-      end
+    if Speed > 0 and Ball:GetAttribute("target") == Player.Name and not Parried and (Distance / Speed) <= 0.33 then
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0) -- ปุ่มซ้ายเมาส์
+        Parried = true
+        Cooldown = tick()
+        
+        if (tick() - Cooldown) >= 0.1 then
+            Parried = false
+        end
     end
-end)  
+end)
