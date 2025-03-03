@@ -1,3 +1,5 @@
+_G.AutoBall = true
+
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
@@ -36,12 +38,14 @@ Player.CharacterAdded:Connect(function(newCharacter)
 end)
 
 -- ทำให้ตัวละครบินไปหาบอลแบบลื่นไหลและไม่หลุด
-RunService.Heartbeat:Connect(function()
+_G.BallLoop = RunService.Heartbeat:Connect(function()
+    if not _G.AutoBall then return end
+    
     local Ball = GetBall()
     if not Ball or not HRP then return end
 
     local BallPosition = Ball.Position
-    local TargetPosition = BallPosition - Vector3.new(1, 12, 0) -- ลอยต่ำกว่าบอล 15 Studs
+    local TargetPosition = BallPosition - Vector3.new(1, 12, 0) -- ลอยต่ำกว่าบอล 12 Studs
 
     -- ตรวจสอบระยะห่างจากบอลเพื่อป้องกันการเคลื่อนที่ผิดพลาด
     local Distance = (HRP.Position - TargetPosition).Magnitude
@@ -51,3 +55,11 @@ RunService.Heartbeat:Connect(function()
     HRP.Position = TargetPosition
 end)
 
+-- ฟังก์ชันปิดการทำงาน
+_G.StopAutoBall = function()
+    _G.AutoBall = false
+    if _G.BallLoop then
+        _G.BallLoop:Disconnect()
+    end
+    DisableNoSlip()
+end
