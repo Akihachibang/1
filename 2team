@@ -1,0 +1,14 @@
+while true do
+    local args = {
+        [1] = "2Teams"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages")
+        :WaitForChild("_Index")
+        :WaitForChild("sleitnick_net@0.1.0")
+        :WaitForChild("net")
+        :WaitForChild("RE/UpdateVotes")
+        :FireServer(unpack(args))
+    
+    task.wait(1) -- ปรับเวลาตามต้องการ (1 วินาที)
+end
