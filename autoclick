@@ -1,0 +1,11 @@
+if _G.AutoPressF == nil then
+    _G.AutoPressF = true
+else
+    _G.AutoPressF = not _G.AutoPressF
+end
+
+while _G.AutoPressF do
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, "F", false, game)
+    game:GetService("VirtualInputManager"):SendKeyEvent(false, "F", false, game)
+    wait(0.1) -- ปรับความเร็วในการกดได้ที่นี่
+end
