@@ -1,4 +1,4 @@
-_G.AutoBall = true
+_G.AutoBall = not _G.AutoBall -- สลับค่าระหว่าง true/false
 
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -7,7 +7,6 @@ local Player = Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local HRP = Character:WaitForChild("HumanoidRootPart")
 
--- ฟังก์ชันหาบอล
 local function GetBall()
     for _, Ball in ipairs(workspace.Balls:GetChildren()) do
         if Ball:GetAttribute("realBall") then
@@ -16,50 +15,41 @@ local function GetBall()
     end
 end
 
--- ฟังก์ชันทำให้ทะลุทุกสิ่งที่ขวาง
 local function EnableNoSlip()
     if HRP then
         HRP.CanCollide = false
     end
 end
 
--- ฟังก์ชันเปิดการชนของตัวละคร
 local function DisableNoSlip()
     if HRP then
         HRP.CanCollide = true
     end
 end
 
--- ฟังก์ชันเมื่อเกิดใหม่
 Player.CharacterAdded:Connect(function(newCharacter)
     Character = newCharacter
-    HRP = Character:WaitForChild("HumanoidRootPart") -- รอให้ตัวละครโหลดใหม่
+    HRP = Character:WaitForChild("HumanoidRootPart")
     EnableNoSlip()
 end)
 
--- ทำให้ตัวละครบินไปหาบอลแบบลื่นไหลและไม่หลุด
-_G.BallLoop = RunService.Heartbeat:Connect(function()
-    if not _G.AutoBall then return end
-    
-    local Ball = GetBall()
-    if not Ball or not HRP then return end
+if _G.BallLoop then
+    _G.BallLoop:Disconnect() -- ปิดการทำงานเก่า
+    _G.BallLoop = nil
+end
 
-    local BallPosition = Ball.Position
-    local TargetPosition = BallPosition - Vector3.new(1, 12, 0) -- ลอยต่ำกว่าบอล 12 Studs
+if _G.AutoBall then
+    _G.BallLoop = RunService.Heartbeat:Connect(function()
+        local Ball = GetBall()
+        if not Ball or not HRP then return end
 
-    -- ตรวจสอบระยะห่างจากบอลเพื่อป้องกันการเคลื่อนที่ผิดพลาด
-    local Distance = (HRP.Position - TargetPosition).Magnitude
-    if Distance > 50 then return end -- ถ้าไกลเกิน 50 Studs ไม่ต้องเคลื่อนที่
+        local BallPosition = Ball.Position
+        local TargetPosition = BallPosition - Vector3.new(1, 12, 0)
+        local Distance = (HRP.Position - TargetPosition).Magnitude
+        if Distance > 50 then return end
 
-    -- ปรับตำแหน่งให้เคลื่อนที่ตามบอล
-    HRP.Position = TargetPosition
-end)
-
--- ฟังก์ชันปิดการทำงาน
-_G.StopAutoBall = function()
-    _G.AutoBall = false
-    if _G.BallLoop then
-        _G.BallLoop:Disconnect()
-    end
+        HRP.Position = TargetPosition
+    end)
+else
     DisableNoSlip()
 end
