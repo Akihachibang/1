@@ -1,0 +1,73 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- ฟังก์ชันวาปไปหาเป้าหมาย
+local function teleportToPlayer(targetUsername)
+    local targetPlayer = Players:FindFirstChild(targetUsername)
+
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(targetPosition + Vector3.new(0, 3, 0)) -- วาปไปเหนือหัวเป้าหมายเล็กน้อย
+            print("✅ วาปไปหา " .. targetUsername .. " สำเร็จ!")
+        else
+            print("❌ คุณไม่มีตัวละครในเกม")
+        end
+    else
+        print("❌ ไม่พบผู้เล่นที่ชื่อ " .. targetUsername)
+    end
+end
+
+-- สร้าง GUI และเพิ่มไปที่ PlayerGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = player:FindFirstChildOfClass("PlayerGui") -- ✅ แก้ไขให้ UI แสดงผลได้
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 250, 0, 100)
+Frame.Position = UDim2.new(0.5, -125, 0.3, 0)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.Parent = ScreenGui
+
+local TextBox = Instance.new("TextBox")
+TextBox.Size = UDim2.new(0, 200, 0, 40)
+TextBox.Position = UDim2.new(0.5, -100, 0.2, 0)
+TextBox.PlaceholderText = "ใส่ชื่อผู้เล่นที่ต้องการวาป"
+TextBox.TextScaled = true
+TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.Parent = Frame
+
+local TeleportButton = Instance.new("TextButton")
+TeleportButton.Size = UDim2.new(0, 200, 0, 40)
+TeleportButton.Position = UDim2.new(0.5, -100, 0.6, 0)
+TeleportButton.Text = "🔄 วาปไปหาเป้าหมาย"
+TeleportButton.TextScaled = true
+TeleportButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+TeleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TeleportButton.Parent = Frame
+
+-- 🔴 ปุ่มกากบาท (ปิด UI)
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -35, 0, 5) -- ตำแหน่งขวาบน
+CloseButton.Text = "❌"
+CloseButton.TextScaled = true
+CloseButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Parent = Frame
+
+-- เมื่อกดปุ่มวาปไปหาผู้เล่นที่ใส่ชื่อไว้
+TeleportButton.MouseButton1Click:Connect(function()
+    local targetName = TextBox.Text
+    if targetName ~= "" then
+        teleportToPlayer(targetName)
+    else
+        print("⚠️ กรุณาใส่ชื่อผู้เล่นก่อนวาป")
+    end
+end)
+
+-- เมื่อกดปุ่ม ❌ ให้ปิด UI
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
