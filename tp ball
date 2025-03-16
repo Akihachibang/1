@@ -46,7 +46,7 @@ if _G.AutoBall then
         local BallPosition = Ball.Position
         local TargetPosition = BallPosition - Vector3.new(1, 12, 0)
         local Distance = (HRP.Position - TargetPosition).Magnitude
-        if Distance > 100 then return end
+        if Distance > 60 then return end
 
         HRP.Position = TargetPosition
     end)
