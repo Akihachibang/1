@@ -1,8 +1,4 @@
-local runCount = 0
-
-while runCount < 2 do
-    runCount = runCount + 1
-    
+while true do
     -- ส่งคำสั่ง ProcessLTMRoll
     local args = {
         [1] = true
@@ -28,5 +24,5 @@ while runCount < 2 do
         :FireServer()
 
     -- หน่วงเวลาอีก 1 วินาที (ปรับได้)
-    wait(1)
+    wait(0)
 end
