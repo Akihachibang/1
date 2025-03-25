@@ -43,8 +43,8 @@ RunService.Heartbeat:Connect(function()
     local Speed = Ball.zoomies and Ball.zoomies.VectorVelocity.Magnitude or 0
     local Distance = (HRP.Position - Ball.Position).Magnitude
     
-    if Speed > 0 and Ball:GetAttribute("target") == Player.Name and not Parried and (Distance / Speed) <= 0.40 then
-        VirtualInputManager:SendMouseButtonEvent(1, 0, 0, true, game, 0) -- ปุ่มซ้ายเมาส์
+    if Speed > 0 and Ball:GetAttribute("target") == Player.Name and not Parried and (Distance / Speed) <= 0.30 then
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0) -- ปุ่มซ้ายเมาส์
         Parried = true
         Cooldown = tick()
         
