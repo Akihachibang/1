@@ -1,0 +1,11 @@
+while true do
+    local args = {
+        [1] = "Luck",
+        [2] = "Crowns",
+        [3] = 100
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_net@0.1.0"):WaitForChild("net"):WaitForChild("RE/ClanUpgrade"):FireServer(unpack(args))
+
+    wait(1) -- รอ 1 วินาที เพื่อป้องกันการส่งคำขอเร็วเกินไป
+end
