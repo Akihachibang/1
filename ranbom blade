@@ -1,21 +1,6 @@
--- วนลูปให้รันคำสั่งไปเรื่อยๆ
-_g.autoOpenCase = false
+local args = {
+    [1] = "PromptPurchaseCrate",
+    [2] = workspace:WaitForChild("Spawn"):WaitForChild("Crates"):WaitForChild("NormalSwordCrate")
+}
 
-while _g.autoOpenCase do
-    -- รันคำสั่งแรก
-    local args1 = {
-        [1] = "PromptPurchaseCrate",
-        [2] = workspace:WaitForChild("Spawn"):WaitForChild("Crates"):WaitForChild("NormalSwordCrate")
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Remote"):WaitForChild("RemoteFunction"):InvokeServer(unpack(args1))
-
-    -- รันคำสั่งที่สอง (ใหม่)
-    local args2 = {
-        [1] = "OpeningCase",
-        [2] = false
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Remote"):WaitForChild("RemoteEvent"):FireServer(unpack(args2))
-    
-    -- หน่วงเวลาสักครู่เพื่อป้องกันการทำงานหนักเกินไป
-    wait(1)
-end
+game:GetService("ReplicatedStorage"):WaitForChild("Remote"):WaitForChild("RemoteFunction"):InvokeServer(unpack(args))
